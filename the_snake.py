@@ -67,18 +67,23 @@ class GameObject:
 class Apple(GameObject):
     """Дочерний класс - яблоко, который наследуются от класса GameObject."""
 
-    def __init__(self, occupied_positions, body_color=APPLE_COLOR):
+    def __init__(
+            self,
+            occupied_position=tuple(),
+            body_color=APPLE_COLOR
+    ):
         """Инициализирует атрибуты класса:
         occupied_positions - занятые змейкой позиции,
         body_color - цвет яблока (по умолчанию: красный (255, 0, 0)).
         Вызывает метод randomize_position, чтобы установить начальную позицию
         яблока.
         """
-        super().__init__(occupied_positions)
+        super().__init__()
+        self.occupied_position = occupied_position
         self.body_color = body_color
-        self.randomize_position(occupied_positions)
+        self.randomize_position(occupied_position)
 
-    def randomize_position(self, occupied_positions):
+    def randomize_position(self, occupied_position):
         """Устанавливает случайное положение яблока на игровом поле."""
         # Проверяем в цикле появления яблока на теле змейки.
         # Eсли яблоко не в занимаемых змейкой позициях, то размещаем яблоко
@@ -88,7 +93,7 @@ class Apple(GameObject):
                 randrange(0, (SCREEN_WIDTH - GRID_SIZE), GRID_SIZE),
                 randrange(0, (SCREEN_HEIGHT - GRID_SIZE), GRID_SIZE)
             )
-            if self.position not in occupied_positions:
+            if self.position not in occupied_position:
                 self.position = self.position
                 break
 
@@ -197,7 +202,7 @@ def main():
     # Cоздаем экземпляры класса и атрибут occupied_position ("занятые позиции")
     # и передаем в него позиции змейки.
     snake = Snake()
-    occupied_position = set(snake.positions)
+    occupied_position = snake.positions
     apple = Apple(occupied_position)
 
     while True:
