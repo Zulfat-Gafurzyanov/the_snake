@@ -215,7 +215,7 @@ def main():
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw()
-        apple.draw()        
+        apple.draw()
         pygame.display.update()
 
 
