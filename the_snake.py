@@ -46,15 +46,15 @@ class GameObject:
 
     def __init__(
         self,
-        position=((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2)),
-        body_color=None
+        body_color=None,
+        position=((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
     ) -> None:
         """Инициализирует базовые атрибуты класса:
         position - позиция объекта на поле (по умолчанию: середина экрана).
         body_color - цвет объекта.
         """
-        self.position = position
         self.body_color = body_color
+        self.position = position
 
     def draw(self):
         """Создали метод-шаблон."""
@@ -69,26 +69,25 @@ class Apple(GameObject):
 
     def __init__(
             self,
-            position=(
-                randrange(0, (SCREEN_WIDTH - GRID_SIZE), GRID_SIZE),
-                randrange(0, (SCREEN_HEIGHT - GRID_SIZE), GRID_SIZE)
-            ),
             body_color=APPLE_COLOR
     ):
         """Инициализирует атрибуты класса:
-        position - позиция яблока на поле (по умолчанию: в случайном месте)
         body_color - цвет яблока (по умолчанию: красный (255, 0, 0)).
         Вызывает метод randomize_position, чтобы установить начальную позицию
         яблока.
         """
-        super().__init__(position, body_color)
+        super().__init__(body_color)
+        self.randomize_position()
 
-    def randomize_position(self, positions):
+    def randomize_position(
+        self,
+        occupied_positions=[((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))]
+    ):
         """Устанавливает случайное положение яблока на игровом поле."""
         # Проверяем появления яблока на теле змейки (аргумент: positions).
         # Eсли яблоко появилось на змейке, то размещаем яблоко
         # случайным образом на экране.
-        if self.position in positions:
+        if self.position in occupied_positions:
             self.position = (
                 randrange(0, (SCREEN_WIDTH - GRID_SIZE), GRID_SIZE),
                 randrange(0, (SCREEN_HEIGHT - GRID_SIZE), GRID_SIZE)
@@ -106,7 +105,6 @@ class Snake(GameObject):
 
     def __init__(
         self,
-        position=((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2)),
         body_color=SNAKE_COLOR
     ):
         """Задаёт цвет змейки (по умолчанию: зеленый (0, 255, 0)),
@@ -115,7 +113,7 @@ class Snake(GameObject):
         last - последний элемент списка (хвост змейки)
         и вызывает метод reset().
         """
-        super().__init__(position, body_color)
+        super().__init__(body_color)
         self.direction = RIGHT
         self.reset()
 
@@ -212,12 +210,12 @@ def main():
             # Размещаем новое яблоко с учетом позиции змейки.
             apple.randomize_position(snake.positions)
         # Проверяем факт столкновения змейки с собой.
-        # При положительном исходе, сбросываем игру при помощи метода reset.
+        # При положительном исходе, сбросываем игру пр и помощи метода reset.
         if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
-        apple.draw()
         snake.draw()
+        apple.draw()        
         pygame.display.update()
 
 
